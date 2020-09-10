@@ -3,7 +3,7 @@ properties([disableConcurrentBuilds()])
 
 pipeline {
     environment { 
-        registry = "avvppro/dtester" 
+        registry = "avvppro/dt-nginx" 
         registryCredential = 'dockerhub_id' 
         dockerImage = '' 
     }
@@ -12,7 +12,7 @@ pipeline {
         stage("Build Docker Image") {
             steps {
                 script { 
-                    dockerImage = docker.build registry + ":dtester_balancer" 
+                    dockerImage = docker.build registry + ":${env.BUILD_ID}" 
                 }
             }
         }
@@ -27,7 +27,7 @@ pipeline {
         } 
         stage('Cleaning up') { 
             steps { 
-                sh "docker rmi $registry:dtester_balancer"
+                sh "docker rmi $registry:${env.BUILD_ID}"
             }
         } 
     }
